@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS Library_Audit (
+    Audit_ID INT AUTO_INCREMENT PRIMARY KEY,
+    Action VARCHAR(10) NOT NULL,
+    Book_ISBN INT,
+    Old_Title VARCHAR(255),
+    Old_Publisher_Name VARCHAR(255),
+    Old_Price DECIMAL(10,2),
+    Old_Date_Of_Publication DATE,
+    Old_Book_Copy INT,
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create the trigger
+DELIMITER //
+
+CREATE TRIGGER library_audit_trigger
+AFTER UPDATE ON Library
+FOR EACH ROW
+BEGIN
+    INSERT INTO Library_Audit (Action, Book_ISBN, Old_Title, Old_Publisher_Name, Old_Price, Old_Date_Of_Publication, Old_Book_Copy)
+    VALUES ('UPDATE', OLD.Book_ISBN, OLD.Title, OLD.Publisher_Name, OLD.Price, OLD.Date_Of_Publication, OLD.Book_Copy);
+END//
+
+DELIMITER ;
+
+
+CREATE TABLE Library (
+    Book_ISBN VARCHAR(255) PRIMARY KEY,
+    Title VARCHAR(255),
+    Author VARCHAR(255),
+    Publisher_Name VARCHAR(255),
+    Price DECIMAL(10, 2),
+    Date_Of_Publication DATE,
+    Book_Copy INT
+);
