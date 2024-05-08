@@ -1,0 +1,62 @@
+-- Create the Book table
+CREATE TABLE Book (
+    Book_ISBN INT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Publisher_Name VARCHAR(255),
+    Price DECIMAL(10, 2) CHECK (Price > 0),
+    Date_Of_Publication DATE DEFAULT CURRENT_DATE,
+    Book_Copy INT,
+    CONSTRAINT CHK_Book_Copy CHECK (Book_Copy BETWEEN 1 AND 100) -- Example constraint
+);
+
+-- Create the Author table
+CREATE TABLE Author (
+    Author_ID INT PRIMARY KEY,
+    Author_Name VARCHAR(255) NOT NULL,
+    City VARCHAR(255),
+    CONSTRAINT FK_Author_City FOREIGN KEY (City) REFERENCES City(City) -- Example foreign key constraint
+);
+
+-- Insert records into the Book table
+INSERT INTO Book (Book_ISBN, Title, Publisher_Name, Price, Book_Copy)
+VALUES
+(1, 'Book A', 'Publisher A', 25.99, 12),
+(2, 'Book B', 'Publisher B', 19.99, 8),
+(3, 'Book C', 'Publisher A', 29.99, 15),
+(4, 'Book D', 'Publisher C', 35.50, 5),
+(5, 'Book E', 'Publisher B', 22.50, 10);
+
+-- Insert records into the Author table
+INSERT INTO Author (Author_ID, Author_Name, City)
+VALUES
+(1, 'Author X', 'Pune'),
+(2, 'Author Y', 'Mumbai'),
+(3, 'Author Z', 'Pune'),
+(4, 'Author W', 'Delhi'),
+(5, 'Author V', 'Bangalore');
+
+
+SELECT Title
+FROM Book
+WHERE Book_Copy BETWEEN 10 AND 15;
+
+
+SELECT Publisher_Name
+FROM Book
+GROUP BY Publisher_Name
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+
+SELECT Publisher_Name, COUNT(*) AS Book_Count
+FROM Book
+GROUP BY Publisher_Name
+ORDER BY Book_Count ASC;
+
+SELECT b.Title, b.Publisher_Name, b.Price
+FROM Book b
+JOIN Author a ON b.Author_ID = a.Author_ID
+WHERE a.City = 'Pune';
+
+SELECT *
+FROM BOOK
+WHERE Book_ISBN IN (SELECT Book_ISBN FROM BOOK_AUTHORS WHERE Author_City = 'Pune');
