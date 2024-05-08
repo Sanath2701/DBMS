@@ -1,0 +1,39 @@
+DELIMITER //
+
+-- Create Result table to store marks arranged by class
+CREATE TABLE IF NOT EXISTS Result (
+    Roll INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255),
+    Class VARCHAR(255)
+);
+
+DELIMITER ;
+
+DELIMITER //
+
+-- Create proc_Grade procedure
+CREATE PROCEDURE proc_Grade(
+    in_name VARCHAR(255),
+    in_total_marks INT,
+    OUT out_class VARCHAR(255)
+)
+BEGIN
+    IF in_total_marks >= 990 THEN
+        SET out_class = 'Distinction';
+    ELSEIF in_total_marks BETWEEN 900 AND 989 THEN
+        SET out_class = 'First Class';
+    ELSEIF in_total_marks BETWEEN 825 AND 899 THEN
+        SET out_class = 'Higher Second Class';
+    ELSE
+        SET out_class = 'Not Classified';
+    END IF;
+END//
+
+DELIMITER ;
+SET @name := 'John';
+SET @total_marks := 950;
+SET @class := '';
+
+CALL proc_Grade(@name, @total_marks, @class);
+
+INSERT INTO Result (Name, Class) VALUES (@name, @class);
