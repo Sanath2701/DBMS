@@ -1,0 +1,68 @@
+CREATE TABLE dept (
+    dno INT PRIMARY KEY,
+    dname VARCHAR(255),
+    mgreno INT,
+    FOREIGN KEY (mgreno) REFERENCES emp(eno)
+);
+
+CREATE TABLE emp (
+    eno INT PRIMARY KEY,
+    ename VARCHAR(255),
+    bdate DATE,
+    title VARCHAR(255),
+    salary DECIMAL(10, 2),
+    dno INT,
+    FOREIGN KEY (dno) REFERENCES dept(dno)
+);
+
+CREATE TABLE proj (
+    pno INT PRIMARY KEY,
+    pname VARCHAR(255),
+    budget DECIMAL(10, 2),
+    dno INT,
+    FOREIGN KEY (dno) REFERENCES dept(dno)
+);
+
+CREATE TABLE workson (
+    eno INT,
+    pno INT,
+    hours INT,
+    PRIMARY KEY (eno, pno),
+    FOREIGN KEY (eno) REFERENCES emp(eno),
+    FOREIGN KEY (pno) REFERENCES proj(pno)
+);
+
+INSERT INTO dept (dno, dname, mgreno) VALUES
+(1, 'IT Department', 100),
+(2, 'Finance Department', 101),
+(3, 'Marketing Department', 102);
+
+INSERT INTO emp (eno, ename, bdate, title, salary, dno) VALUES
+(100, 'John Doe', '1990-05-15', 'Software Engineer', 60000.00, 1),
+(101, 'Jane Smith', '1985-09-20', 'Financial Analyst', 70000.00, 2),
+(102, 'Mike Johnson', '1988-07-10', 'Marketing Manager', 80000.00, 3);
+
+INSERT INTO proj (pno, pname, budget, dno) VALUES
+(1, 'Project A', 50000.00, 1),
+(2, 'Project B', 75000.00, 2),
+(3, 'Project C', 60000.00, 1);
+
+
+INSERT INTO workson (eno, pno, hours) VALUES
+(100, 1, 40),
+(101, 2, 30),
+(102, 1, 45),
+(100, 3, 35);
+
+SELECT ename
+FROM emp
+WHERE dno = 'D1'
+ORDER BY salary DESC;
+
+SELECT *
+FROM dept
+ORDER BY dname ASC;
+
+SELECT emp.ename, dept.dname, emp.title
+FROM emp
+INNER JOIN dept ON emp.dno = dept.dno;
