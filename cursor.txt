@@ -1,0 +1,64 @@
+CREATE TABLE Students (
+    Student_ID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(255),
+    Marks INT
+);
+
+INSERT INTO Students (Name, Marks) VALUES
+('Alice', 95),
+('Bob', 85),
+('Charlie', 75),
+('David', 65),
+('Emma', 55);
+
+DELIMITER //
+
+CREATE PROCEDURE Calculate_Grade()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE student_id INT;
+    DECLARE student_name VARCHAR(255);
+    DECLARE student_marks INT;
+    DECLARE student_grade VARCHAR(255);
+
+    -- Declare cursor for selecting students
+    DECLARE student_cursor CURSOR FOR
+    SELECT Student_ID, Name, Marks
+    FROM Students;
+
+    -- Declare continue handler for cursor
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN student_cursor;
+
+    student_loop: LOOP
+        FETCH student_cursor INTO student_id, student_name, student_marks;
+
+        IF done THEN
+            LEAVE student_loop;
+        END IF;
+
+        -- Calculate grade based on marks
+        IF student_marks >= 90 THEN
+            SET student_grade = 'A';
+        ELSEIF student_marks >= 80 THEN
+            SET student_grade = 'B';
+        ELSEIF student_marks >= 70 THEN
+            SET student_grade = 'C';
+        ELSEIF student_marks >= 60 THEN
+            SET student_grade = 'D';
+        ELSE
+            SET student_grade = 'F';
+        END IF;
+
+        -- Display the result
+        SELECT CONCAT(student_name, ' - Grade: ', student_grade) AS Result;
+
+    END LOOP;
+
+    CLOSE student_cursor;
+END//
+
+DELIMITER ;
+
+CALL Calculate_Grade();
