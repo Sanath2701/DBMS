@@ -1,0 +1,40 @@
+-- Create the Emp_company table
+CREATE TABLE Emp_company (
+    ename VARCHAR(255),
+    cname VARCHAR(255),
+    salary DECIMAL(10, 2),
+    joiningdate DATE,
+    city VARCHAR(255)
+);
+
+-- Insert sample data into the Emp_company table
+INSERT INTO Emp_company (ename, cname, salary, joiningdate, city) VALUES
+('John', 'TATA', 60000, '2000-01-15', 'Mumbai'),
+('Alice', 'ACC', 55000, '2001-03-20', 'Delhi'),
+('Bob', 'TATA', 65000, '1999-12-10', 'Bangalore'),
+('Charlie', 'ACC', 58000, '2000-02-05', 'Mumbai'),
+('David', 'INFY', 70000, '2002-05-12', 'Pune');
+
+-- 1. List the maximum salary in all companies
+SELECT MAX(salary) AS max_salary FROM Emp_company;
+
+-- 2. Find maximum salary of employees of “TATA‟ Company
+SELECT MAX(salary) AS max_salary FROM Emp_company WHERE cname = 'TATA';
+
+-- 3. Count the number employees working in”ACC” company
+SELECT COUNT(*) AS num_employees FROM Emp_company WHERE cname = 'ACC';
+
+-- 4. Display the names of companies and the maximum salary in that company
+SELECT cname, MAX(salary) AS max_salary FROM Emp_company GROUP BY cname;
+
+-- 5. Find the average salary of each company
+SELECT cname, AVG(salary) AS avg_salary FROM Emp_company GROUP BY cname;
+
+-- 6. Increase the salary of an employee by 15% who are living in city Mumbai
+UPDATE Emp_company SET salary = salary * 1.15 WHERE city = 'Mumbai';
+
+-- 7. Delete rows of the table having salary less than 5000
+DELETE FROM Emp_company WHERE salary < 5000;
+
+-- 8. List the names of employees who joined in Jan-2000
+SELECT ename FROM Emp_company WHERE MONTH(joiningdate) = 1 AND YEAR(joiningdate) = 2000;
