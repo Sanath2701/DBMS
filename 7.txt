@@ -1,0 +1,76 @@
+-- Create Deposit table
+CREATE TABLE Deposit (
+    accountno INT PRIMARY KEY,
+    cname VARCHAR(255),
+    amount DECIMAL(10, 2),
+    acctdate DATE,
+    bname VARCHAR(255),
+    FOREIGN KEY (bname) REFERENCES Branch(bname)
+);
+
+-- Create Branch table
+CREATE TABLE Branch (
+    bname VARCHAR(255) PRIMARY KEY,
+    city VARCHAR(255)
+);
+
+-- Create Customer table
+CREATE TABLE Customer (
+    cname VARCHAR(255) PRIMARY KEY,
+    city VARCHAR(255)
+);
+
+-- Create Borrow table
+CREATE TABLE Borrow (
+    loanno INT PRIMARY KEY,
+    cname VARCHAR(255),
+    bname VARCHAR(255),
+    amount DECIMAL(10, 2),
+    FOREIGN KEY (cname) REFERENCES Customer(cname),
+    FOREIGN KEY (bname) REFERENCES Branch(bname)
+);
+
+-- Insert data into Deposit table
+INSERT INTO Deposit (accountno, cname, amount, acctdate, bname)
+VALUES (1001, 'Alice', 1500.00, '2022-05-01', 'BranchA'),
+       (1002, 'Bob', 2000.00, '2022-05-02', 'BranchB'),
+       (1003, 'Charlie', 1200.00, '2022-05-03', 'BranchC'),
+       (1004, 'David', 1800.00, '2022-05-04', 'BranchA');
+
+-- Insert data into Branch table
+INSERT INTO Branch (bname, city)
+VALUES ('BranchA', 'CityX'),
+       ('BranchB', 'CityY'),
+       ('BranchC', 'CityZ');
+
+-- Insert data into Customer table
+INSERT INTO Customer (cname, city)
+VALUES ('Alice', 'CityX'),
+       ('Bob', 'CityY'),
+       ('Charlie', 'CityZ'),
+       ('David', 'CityX');
+
+-- Insert data into Borrow table
+INSERT INTO Borrow (loanno, cname, bname, amount)
+VALUES (2001, 'Alice', 'BranchA', 5000.00),
+       (2002, 'Bob', 'BranchB', 4000.00),
+       (2003, 'Charlie', 'BranchC', 3000.00),
+       (2004, 'David', 'BranchA', 2000.00);
+
+SELECT * FROM Borrow;
+SELECT DISTINCT cname 
+FROM Deposit 
+WHERE amount > 1000 AND cname LIKE 'A%';
+SELECT cname, amount 
+FROM Deposit 
+ORDER BY amount DESC;
+SELECT SUM(amount) AS total_loan 
+FROM Borrow;
+SELECT d.bname AS branchname, SUM(d.amount) AS total_deposit 
+FROM Deposit d 
+GROUP BY d.bname;
+
+SELECT d.bname 
+FROM Deposit d 
+GROUP BY d.bname 
+HAVING SUM(d.amount) > 4000;
