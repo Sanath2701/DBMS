@@ -1,0 +1,84 @@
+-- Create Deposit table
+CREATE TABLE Deposit (
+    accountno INT PRIMARY KEY,
+    cname VARCHAR(255),
+    amount DECIMAL(10, 2),
+    acctdate DATE,
+    bname VARCHAR(255),
+    FOREIGN KEY (bname) REFERENCES Branch(bname)
+);
+
+-- Create Branch table
+CREATE TABLE Branch (
+    bname VARCHAR(255) PRIMARY KEY,
+    city VARCHAR(255)
+);
+
+-- Create Customer table
+CREATE TABLE Customer (
+    cname VARCHAR(255) PRIMARY KEY,
+    city VARCHAR(255)
+);
+
+-- Create Borrow table
+CREATE TABLE Borrow (
+    loanno INT PRIMARY KEY,
+    cname VARCHAR(255),
+    bname VARCHAR(255),
+    amount DECIMAL(10, 2),
+    FOREIGN KEY (cname) REFERENCES Customer(cname),
+    FOREIGN KEY (bname) REFERENCES Branch(bname)
+);
+
+-- Insert data into Deposit table
+INSERT INTO Deposit (accountno, cname, amount, acctdate, bname)
+VALUES (1001, 'Anil', 1500.00, '2022-05-01', 'BranchA'),
+       (1002, 'Sunil', 2000.00, '2022-05-02', 'BranchB'),
+       (1003, 'Raj', 1200.00, '2022-05-03', 'BranchC'),
+       (1004, 'Puneet', 1800.00, '2022-05-04', 'BranchA');
+
+-- Insert data into Branch table
+INSERT INTO Branch (bname, city)
+VALUES ('BranchA', 'Mumbai'),
+       ('BranchB', 'Pune'),
+       ('BranchC', 'Mumbai');
+
+-- Insert data into Customer table
+INSERT INTO Customer (cname, city)
+VALUES ('Anil', 'Mumbai'),
+       ('Sunil', 'Pune'),
+       ('Raj', 'Mumbai'),
+       ('Puneet', 'Mumbai');
+
+-- Insert data into Borrow table
+INSERT INTO Borrow (loanno, cname, bname, amount)
+VALUES (2001, 'Anil', 'BranchA', 5000.00),
+       (2002, 'Sunil', 'BranchB', 4000.00),
+       (2003, 'Raj', 'BranchC', 3000.00),
+       (2004, 'Puneet', 'BranchA', 2000.00);
+
+SELECT * FROM Borrow;
+
+SELECT cname FROM Deposit WHERE amount > 1000 AND cname LIKE 'A%';
+
+SELECT bname, SUM(amount) AS total_deposit
+FROM Deposit
+WHERE bname IN (SELECT bname FROM Branch WHERE city = 'Mumbai')
+GROUP BY bname
+HAVING total_deposit > 1000;
+
+UPDATE Deposit
+SET amount = amount * 1.1
+WHERE cname IN (SELECT cname FROM Customer WHERE city = 'Pune');
+
+
+UPDATE Deposit
+SET amount = amount - 500
+WHERE cname = 'Anil';
+
+UPDATE Deposit
+SET amount = amount + 500
+WHERE cname = 'Sunil';
+
+DELETE FROM Deposit
+WHERE amount < 500;
