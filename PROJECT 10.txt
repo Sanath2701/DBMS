@@ -31,3 +31,26 @@ FROM EMPLOYEE
 INNER JOIN ASSIGNED ON EMPLOYEE.EMPNO = ASSIGNED.EMPNO
 INNER JOIN PROJECT ON ASSIGNED.PNO = PROJECT.PNO
 WHERE PROJECT.PNAME = 'DBMS';  -- Replace 'DBMS' with the project name you want to retrieve details for
+
+-- Insert data into PROJECT table
+INSERT INTO PROJECT (PNO, PNAME, CHIEF)
+VALUES
+(1, 'Project 1', 'Chief 1'),
+(2, 'Project 2', 'Chief 2'),
+(3, 'DBMS', 'Chief 3');
+
+-- Insert data into EMPLOYEE table
+INSERT INTO EMPLOYEE (EMPNO, EMPNAME)
+VALUES
+(101, 'Employee 1'),
+(102, 'Employee 2'),
+(103, 'Employee 3');
+
+-- Insert data into ASSIGNED table
+INSERT INTO ASSIGNED (PNO, EMPNO)
+VALUES
+(1, 101),
+(2, 102),
+(2, 103),
+(3, 102);
+
